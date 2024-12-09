@@ -1,9 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fawaterak/model/payment_method_model.dart';
 import 'package:flutter_fawaterak/model/visa_response_model.dart';
-import 'package:flutter_fawaterak/payment_wallet_details_screen.dart';
+import 'package:flutter_fawaterak/screen/payment_wallet_details_screen.dart';
 import 'package:flutter_fawaterak/web_view_fawaterak.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -109,8 +108,16 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         );
       }
+    } on DioException catch (dioError) {
+      if (dioError.response?.statusCode == 422) {
+        debugPrint("Error 422: ${dioError.response?.data}");
+      } else {
+        debugPrint("Unexpected error: ${dioError.message}");
+      }
+    throw Exception('Failed to process payment: ${dioError.message}');
     } catch (e) {
-      throw Exception(e);
+      debugPrint("An unexpected error occurred: $e");
+      throw Exception('Failed due to an unexpected error: $e');
     }
   }
 
