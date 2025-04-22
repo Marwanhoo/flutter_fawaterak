@@ -19,7 +19,7 @@ class _SecondMyHomePageState extends State<SecondMyHomePage> {
   PaymentMethodModel? paymentMethodModel;
   VisaResponseModel? visaResponseModel;
 
-  String accessToken = 'd83a5d07aaeb8442dcbe259e6dae80a3f2e21a3a581e1a5acd';
+  String accessToken = '42fa7d257e5896a28d9626197a5daa52eb87a1f96482ed468c';
   String apiUrlGetPaymentMethods = 'https://staging.fawaterk.com/api/v2/getPaymentmethods';
   String apiUrlProcessPaymentMethods = "https://staging.fawaterk.com/api/v2/invoiceInitPay";
 
@@ -51,14 +51,14 @@ class _SecondMyHomePageState extends State<SecondMyHomePage> {
     try {
       final requestData = {
         'payment_method_id': paymentMethodId,
-        'cartTotal': '500',
+        'cartTotal': '5000',
         'currency': 'EGP',
         'customer': {
-          'first_name': 'test',
-          'last_name': 'test',
-          'email': 'test@test.test',
-          'phone': '01000000000',
-          'address': 'test address',
+          'first_name': 'Engy',
+          'last_name': 'Abdelaziz',
+          'email': 'engy@engy.com',
+          'phone': '01114621092',
+          'address': 'Cairo',
         },
         'redirectionUrls': {
           'successUrl': 'https://dev.fawaterk.com/success',
@@ -66,7 +66,7 @@ class _SecondMyHomePageState extends State<SecondMyHomePage> {
           'pendingUrl': 'https://dev.fawaterk.com/pending',
         },
         'cartItems': [
-          {'name': 'test', 'price': '500', 'quantity': '1'},
+          {'name': 'Engy Abdelaziz', 'price': '1000', 'quantity': '5'},
         ],
       };
 
