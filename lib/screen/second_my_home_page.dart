@@ -19,7 +19,7 @@ class _SecondMyHomePageState extends State<SecondMyHomePage> {
   PaymentMethodModel? paymentMethodModel;
   VisaResponseModel? visaResponseModel;
 
-  String accessToken = '42fa7d257e5896a28d9626197a5daa52eb87a1f96482ed468c';
+  String accessToken = '42fa7d257e5896a28d9626197a5daa52eb87a1f96482ed468c';//
   String apiUrlGetPaymentMethods = 'https://staging.fawaterk.com/api/v2/getPaymentmethods';
   String apiUrlProcessPaymentMethods = "https://staging.fawaterk.com/api/v2/invoiceInitPay";
 

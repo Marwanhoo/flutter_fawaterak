@@ -1,0 +1,114 @@
+import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class FawaterakPayment extends StatefulWidget {
+  @override
+  _FawaterakPaymentState createState() => _FawaterakPaymentState();
+}
+
+class _FawaterakPaymentState extends State<FawaterakPayment> {
+  bool paymentCompleted = false;
+  String? fawaterkurl;
+
+  final apiUrl = 'https://staging.fawaterk.com/api/v2/invoiceInitPay';
+  final apiToken = 'd83a5d07aaeb8442dcbe259e6dae80a3f2e21a3a581e1a5acd';
+  final paymentId = 4; // 2=Visa-MasterCard, 3=Fawry, 4=Meeza
+
+  void generateFawaterksession() async {
+    final data = {
+      'payment_method_id': paymentId,
+      'cartTotal': '100',
+      'currency': 'EGP',
+      'customer': {
+        'first_name': 'test',
+        'last_name': 'test',
+        'email': 'test@test.test',
+        'phone': '01000000000',
+        'address': 'test address',
+      },
+      'redirectionUrls': {
+        'successUrl': 'https://dev.fawaterk.com/success',
+        'failUrl': 'https://dev.fawaterk.com/fail',
+        'pendingUrl': 'https://dev.fawaterk.com/pending',
+      },
+      'cartItems': [
+        {
+          'name': 'test',
+          'price': '100',
+          'quantity': '1',
+        },
+      ],
+    };
+
+    final headers = {
+      'Authorization': 'Bearer $apiToken',
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: headers,
+        body: json.encode(data),
+      );
+
+      final responseData = json.decode(response.body);
+      if (responseData != null) {
+        setState(() {
+          fawaterkurl = responseData['data']['payment_data']['redirectTo'];
+          paymentCompleted = true;
+        });
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WebViewPlatform.instance = SurfaceAndroidWebView(); // Required for Android
+    generateFawaterksession();
+  }
+
+  void handleNavigationStateChange(String newUrl) {
+    // Check if the URL has changed to handle the response or perform further actions
+    print('newUrl: $newUrl');
+
+    // Replace 'https://dev.fawaterk.com/' with your redirectionUrls
+    if (newUrl.contains('https://dev.fawaterk.com/')) {
+      // Handle the response or perform any required actions here
+      if (newUrl.contains('success')) {
+        print('success');
+      } else {
+        print('Cancelled');
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: paymentCompleted
+          ? WebView(
+        initialUrl: fawaterkurl,
+        navigationDelegate: (NavigationRequest request) {
+          handleNavigationStateChange(request.url);
+          return NavigationDecision.navigate;
+        },
+        javascriptMode: JavascriptMode.unrestricted,
+      )
+          : Center(
+        child: Text('Loading...'),
+      ),
+    );
+  }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: FawaterakPayment(),
+  ));
+}
