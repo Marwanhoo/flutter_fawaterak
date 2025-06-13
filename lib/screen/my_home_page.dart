@@ -133,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Fawaterak"),
+        title: const Text("Payment Getway"),
       ),
       body: isLoading
           ? const Center(
